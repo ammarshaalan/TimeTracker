@@ -38,8 +38,11 @@ namespace TimeTracker
             }
             catch(Exception ex)
             {
-                var errorMessage = "An error occurred while retrieving data from the API: " + ex.Message;
-                return View("Error", new { message = errorMessage });
+                var errorMessage = "An error occurred while trying to retrieve time entry data from the API. The following error message was returned: " + ex.Message;
+
+                ViewBag.ErrorMessage = errorMessage;
+
+                return View("Error");
             }
         }
     }
