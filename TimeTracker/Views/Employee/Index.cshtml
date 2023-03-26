@@ -1,36 +1,28 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Bootstrap Example</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-</head>
-<body>
+﻿@using Newtonsoft.Json
 
-    <div class="container">
-        <h2>Employee Time Tracker</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Total Time Worked</th>
-                </tr>
-            </thead>
-            <tbody>
-                  @foreach (var employee in Model)
-        {
-            var color = employee.TotalTimeWorked < 100 ? "danger" : "primary";
-            <tr class="@color">
-                <td>@employee.Name</td>
-                <td>@employee.TotalTimeWorked hours</td>
+<div class="container">
+    <h2>Employee Time Tracker</h2>
+    @{
+        string employeesJson = JsonConvert.SerializeObject(Model);
+    }
+    <a href="@Url.Action("PieChart", "Employee", new { employeesJson = employeesJson })" class="btn btn-primary">View Pie Chart</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Total Time Worked</th>
             </tr>
-        }
-            </tbody>
-        </table>
-    </div>
-
-</body>
-</html>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model)
+            {
+                var color = employee.TotalTimeWorked < 100 ? "danger" : "primary";
+                <tr class="@color">
+                    <td>@employee.Name</td>
+                    <td>@employee.TotalTimeWorked hours</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

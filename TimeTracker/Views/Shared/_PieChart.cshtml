@@ -1,0 +1,69 @@
+﻿<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var chartData = ViewBag.ChartData;
+}
+
+@if (chartData != null)
+{
+    <div class="container">
+        <h2>Employee Time Tracker - Pie Chart</h2>
+        <button id="download-btn" class="btn btn-primary"style="position: relative; width: 150px; left: 130px;">Download Chart</button>
+        <canvas id="employee-chart" width="400" height="400"></canvas>
+    </div>
+
+
+<script>
+  var employeeData = @Html.Raw(Json.Encode(chartData));
+    var colors = [];
+    for (var i = 0; i < 10; i++) {
+        var color = 'rgba(' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', 0.5)';
+        colors.push(color);
+    }
+  var ctx = document.getElementById('employee-chart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: employeeData.map(e => e.Name),
+      datasets: [{
+       data: employeeData.map(e => e.PercentageTimeWorked),
+        backgroundColor: colors,
+          borderWidth: 1,
+         labels: employeeData.map(e => e.Name)
+
+      }]
+    },
+    options: {
+      responsive: false,
+      legend: {
+        position: 'right',
+        labels: {
+          fontColor: '#333',
+          usePointStyle: true,
+          padding: 20
+        }
+      }
+    }
+  });
+
+    document.getElementById('download-btn').addEventListener('click', function() {
+    var canvas = document.getElementById('employee-chart');
+    var dataUrl = canvas.toDataURL('image/png');
+    var form = document.createElement('form');
+    form.action = '@Url.Action("DownloadChart", "Employee")';
+    form.method = 'post';
+    var hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = canvas.id + '-dataUrl';
+    hiddenField.value = dataUrl;
+    form.appendChild(hiddenField);
+    document.body.appendChild(form);
+    form.submit();
+    });
+    </script>
+
+    
+
+ }
+

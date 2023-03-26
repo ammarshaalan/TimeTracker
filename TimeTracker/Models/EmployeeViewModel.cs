@@ -12,5 +12,8 @@ namespace TimeTracker
         }
 
         private double _totalTimeWorked;
+
+        public double PercentageTimeWorked { get; set; }
+
     }
 }
